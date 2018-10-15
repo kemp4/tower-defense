@@ -13,20 +13,26 @@ pygame.display.set_caption("Tower defence")
 done = False
 
 clock = pygame.time.Clock()
-tower = Tower((255,222,0), 100, 100)
+# tower = Tower((255, 222, 0), 100, 100)
 
-towers_list = pygame.sprite.Group(tower)
+# towers_list = pygame.sprite.Group(tower)
+
+# t = Tower(color=(122, 23, 231), width=100, height=100)
+# t.rect = (100, 100, 100, 100)
+# towers_list.add(t)
+
 # all_sprites_list = pygame.sprite.Group();
 
-all_sprites_list = towers_list
-map_elements_list = MapReader.get_map_elements()
+# all_sprites_list = towers_list
 
+map_elements_list = MapReader().get_map_elements()
 
+all_sprites_list = map_elements_list
+print(map_elements_list)
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-
     all_sprites_list.draw(screen)
     pygame.display.flip()
     clock.tick(60)

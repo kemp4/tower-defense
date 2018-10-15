@@ -1,14 +1,11 @@
 import pygame
 
+from objects.map.MapElement import MapElement
 from settings.Settings import CELL_SIZE
 
 
-class Grass(pygame.sprite.Sprite):
+class Grass(MapElement):
     COLOR = (155, 244, 66)
 
     def __init__(self, position):
-        super().__init__()
-        self.image = pygame.Surface([CELL_SIZE])
-        self.image.fill(self.COLOR)
-        pygame.draw.ellipse(self.image, self.COLOR, [position, CELL_SIZE])
-        self.rect = self.image.get_rect()
+        super(Grass, self).__init__(position, self.COLOR)

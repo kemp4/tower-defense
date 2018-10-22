@@ -11,9 +11,7 @@ class MapElement(pygame.sprite.Sprite):
         self.position = position
         self.image = pygame.Surface(CELL_SIZE)
         self.image.fill(color)
-
         # print("pos_X " + str(position[0]) + " pos_Y " + str(position[1]) + "TYPE = " + str(color))
-
         # pygame.draw.rect(self.image, color, [300, 300, 50, 50])
         # pygame.draw.ellipse(self.image, self.COLOR, position, 1)
         self.rect = self.get_position()

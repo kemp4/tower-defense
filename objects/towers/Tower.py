@@ -14,6 +14,7 @@ class Tower(pygame.sprite.Sprite):
     load_progress = MAX_LOAD_PROGRESS
     load_speed = 1
     disabled = False
+    cost = 20
 
     def __init__(self, position, disabled=False, *groups):
         super().__init__(*groups)

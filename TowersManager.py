@@ -10,22 +10,28 @@ class TowersManager:
     temp_tower = None
 
     def __init__(self):
-        self.create_new_temp_tower()
+        # self.create_new_temp_tower()
+        pass
 
     def create_new_temp_tower(self):
-        self.temp_tower = Tower((0, 0), True)
-        self.__gameCommon.temp_group.add_internal(self.temp_tower)
-        self.temp_tower.add(self.__gameCommon.temp_group)
+        if self.temp_tower is None:
+            self.temp_tower = Tower((0, 0), True)
+            self.__gameCommon.temp_group.add_internal(self.temp_tower)
+            self.temp_tower.add(self.__gameCommon.temp_group)
 
     def create_new_tower(self):
         # newTower = Tower(self.__position_in_game_cords())
+
         if self.temp_tower is not None:
+            if self.__gameCommon.game_variables['cash'] - self.temp_tower.cost < 0:
+                return
             self.temp_tower.disabled = False
             self.temp_tower.kill()
             self.temp_tower.add(self.__gameCommon.towers_list)
             self.__gameCommon.towers_list.add_internal(self.temp_tower)
+            self.temp_tower = None
             self.create_new_temp_tower()
-
+            self.__gameCommon.game_variables['cash'] -= self.temp_tower.cost
     # def __position_in_game_cords(self):
     #     return Vector2(self.temp_tower.position)
 

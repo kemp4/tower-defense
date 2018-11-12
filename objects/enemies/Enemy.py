@@ -17,9 +17,12 @@ class Enemy(pygame.sprite.Sprite):
     __gameCommon = GameCommon()
     speed = 0.05
     # surface = pygame.Surface()
+    wreck_value = 10
 
-    def __init__(self, *groups):
+    def __init__(self, hp, *groups):
         super().__init__(*groups)
+        # self.wreck_value = 10
+        self.hp = hp
         self.position = Vector2(self.__gameCommon.route[0])
         self.destinationPosition = Vector2(self.position)
         self.image = pygame.transform.rotate(self.__gameCommon.images_dict['tank'], 0)
@@ -31,12 +34,12 @@ class Enemy(pygame.sprite.Sprite):
     def __find_new_destination_position(self):
         self.destinationIndex += 1
         if self.destinationIndex >= len(self.__gameCommon.route):
-            self.__gameCommon.lifes -= 1
+            self.__gameCommon.game_variables['lifes'] -= 1
             # print(self.__gameCommon.lifes)
             self.kill()
         else:
             self.destinationPosition = self.__gameCommon.route[self.destinationIndex]
-            angle = Vector2(-1, 0).angle_to(self.destinationPosition-self.position)
+            angle = Vector2(-1, 0).angle_to(self.destinationPosition - self.position)
             # print(angle)
             self.image = pygame.transform.rotate(self.__gameCommon.images_dict['tank'], -angle)
 
@@ -63,3 +66,4 @@ class Enemy(pygame.sprite.Sprite):
         print(self.hp)
         if self.hp <= 0:
             self.kill()
+            self.__gameCommon.game_variables['cash'] += self.wreck_value

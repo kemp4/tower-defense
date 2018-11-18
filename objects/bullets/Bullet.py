@@ -10,7 +10,7 @@ from settings.Settings import CELL_SIZE
 class Bullet(pygame.sprite.Sprite):
     position = Vector2()
     __gameCommon = GameCommon()
-    speed = 0.25
+    speed = 0.09
     target_enemy = None
     parent_tower = None
     damage = 50

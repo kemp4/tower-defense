@@ -21,8 +21,3 @@ class MapElement(pygame.sprite.Sprite):
     def get_rect(self):
         return self.position[0] * CELL_SIZE[0], self.position[1] * CELL_SIZE[1], CELL_SIZE[0], CELL_SIZE[1]
 
-    def set_highlighted(self):
-        pass
-
-    def clear_highlighted(self):
-        pass

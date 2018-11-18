@@ -1,16 +1,17 @@
 import pygame
 from pygame.math import Vector2
+from pygame.sprite import Sprite
 
 from GameCommon import GameCommon
 from objects.bullets.Bullet import Bullet
+from objects.towers.Range import Range
 from settings.Settings import CELL_SIZE, MAX_LOAD_PROGRESS
 
 
 class Tower(pygame.sprite.Sprite):
-    # color = (111, 0, 16)
     __gameCommon = GameCommon()
     position = Vector2()
-    range = 2.5
+    range = 3
     load_progress = MAX_LOAD_PROGRESS
     load_speed = 1
     disabled = False
@@ -56,7 +57,7 @@ class Tower(pygame.sprite.Sprite):
     def aim(self, nearest_enemy):
         angle = Vector2(-1, 0).angle_to(nearest_enemy.position - self.position)
         image = pygame.transform.rotate(self.__gameCommon.images_dict['canon'], -angle + 90)
-        self.image = pygame.transform.scale(image, (70, 70))
+        self.image = pygame.transform.scale(image, CELL_SIZE)
 
     def __find_nearest_enemy(self, enemies_in_range):
         nearest_enemy = enemies_in_range[0]
@@ -69,3 +70,22 @@ class Tower(pygame.sprite.Sprite):
         new_bullet = Bullet(nearest_enemy, self)
         self.__gameCommon.bullets_list.add_internal(new_bullet)
         new_bullet.add(self.__gameCommon.bullets_list)
+
+    def set_highlighted(self):
+        Range(self)
+        # display range
+
+        # wal
+    def is_free(self):
+        return False
+
+    def clear_highlighted(self):
+        pass
+
+        # if self.range_view is not None:
+        #     self.range_view.kill()
+        #     self.range_view = None
+        # display range
+
+        # def get_center(self):
+        #     return Vector2(self.position-Vector2(0.5*self.range, 0.5*self.range))

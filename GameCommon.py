@@ -16,7 +16,12 @@ class GameCommon(object):
             self.temp_group = Group()
             self.images_dict = {}
             self.font = None
-            self.game_variables = {'lifes': MAX_LIFES, 'cash': START_CASH}
+            self.game_variables = {'lifes': MAX_LIFES, 'cash': START_CASH, 'points': 0, 'game_over': 'Game Over'
+                                   }
+            self.highlightable = Group()
+            self.highlighted = Group()
+            self.ranges = Group()
+
             # self.cash_surface = None
             # self.lifes_surface = None
 

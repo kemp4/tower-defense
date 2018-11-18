@@ -11,6 +11,7 @@ from MapReader import MapReader
 from TowersManager import TowersManager
 from WaveManager import WaveManager
 from objects.gui.Button import Button
+from objects.towers.Range import Range
 from settings.Settings import WINDOW_SIZE, LEFT_BUTTON, RIGHT_BUTTON, BACKGROUND_COLOR
 
 pygame.init()
@@ -22,7 +23,6 @@ gameCommon.route = MapReader().get_route()
 
 AssetsReader()
 towersManager = TowersManager()
-# towersManager.create_new_tower()
 
 map_elements_list = MapReader().get_map_elements()
 
@@ -37,13 +37,12 @@ all_sprites_list.add(gameCommon.enemies_list)
 all_sprites_list.add(gameCommon.towers_list)
 
 guiManager = GuiManager()
-# myfont = pygame.font.SysFont(pygame.font.get_default_font(), 30)
-# textsurface = myfont.render('Press any kay or click mouse to start', False, (0, 0, 0))
 
 background = pygame.Surface(WINDOW_SIZE)
 background.fill(BACKGROUND_COLOR)
 
 done = False
+
 while not done:
     waveManager.update()
     mouse_position = pygame.mouse.get_pos()
@@ -57,38 +56,42 @@ while not done:
                 towersManager.create_new_temp_tower()
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT_BUTTON:
             towersManager.cancel_build()
-            # if event.type == pygame.MOUSEMOTION:
-            # print('mouse at (%d, %d)' % event.pos)
 
-    # for sprite in all_sprites_list:
-    #     sprite.update()
-
-    for sprite in map_elements_list:
+    gameCommon.highlighted = Group()
+    if Range:
+        Range.disable()
+    for sprite in gameCommon.highlightable:
+        sprite.clear_highlighted()
         if sprite.rect.collidepoint(mouse_position):
-            sprite.set_highlighted()
+            gameCommon.highlighted.add_internal(sprite)
             for temp in gameCommon.temp_group:
                 temp.position = Vector2(sprite.position)
-        else:
-            sprite.clear_highlighted()
 
-    # towersManager.update()
+    for highlighted in gameCommon.highlighted:
+        highlighted.set_highlighted()
 
-    gameCommon.enemies_list.update()
-    gameCommon.towers_list.update()
-    gameCommon.bullets_list.update()
-    gameCommon.temp_group.update()
+    if not guiManager.is_game_over:
+        gameCommon.enemies_list.update()
+        gameCommon.towers_list.update()
+        gameCommon.bullets_list.update()
+        gameCommon.temp_group.update()
+
     gameCommon.gui_list.update()
 
     screen.blit(background, (0, 0))
-    map_elements_list.draw(screen)
-    gameCommon.enemies_list.draw(screen)
-    gameCommon.bullets_list.draw(screen)
-    gameCommon.towers_list.draw(screen)
-    gameCommon.temp_group.draw(screen)
+    if not guiManager.is_game_over:
+        map_elements_list.draw(screen)
+        gameCommon.enemies_list.draw(screen)
+        gameCommon.bullets_list.draw(screen)
+        gameCommon.towers_list.draw(screen)
+        gameCommon.temp_group.draw(screen)
+        gameCommon.ranges.draw(screen)
     gameCommon.gui_list.draw(screen)
 
     screen.blit(gameCommon.images_dict['mouse'], mouse_position)
     pygame.display.flip()
     clock.tick(60)
+    if gameCommon.game_variables['lifes'] <= 0:
+        guiManager.game_over()
 
 pygame.quit()

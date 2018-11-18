@@ -18,6 +18,8 @@ class AssetsReader:
         slowTowerImage = pygame.image.load(os.path.join('assets', 'towers', 'slow_tower.png')).convert_alpha()
         mouseImage = pygame.image.load(os.path.join('assets', 'gui', 'mouse.png')).convert_alpha()
         bulletImage = pygame.image.load(os.path.join('assets', 'bullets', 'bullet.png')).convert_alpha()
+        rocketImage = pygame.image.load(os.path.join('assets', 'bullets', 'rocket.png')).convert_alpha()
+        slowBulletImage = pygame.image.load(os.path.join('assets', 'bullets', 'slow_bullet.png')).convert_alpha()
         heartImage = pygame.image.load(os.path.join('assets', 'gui', 'heart.png')).convert_alpha()
         cashImage = pygame.image.load(os.path.join('assets', 'gui', 'cash.png')).convert_alpha()
 
@@ -27,6 +29,8 @@ class AssetsReader:
         self.gameCommon.images_dict.update({'rocket_launcher': rocketLauncherImage})
         self.gameCommon.images_dict.update({'slow_tower': slowTowerImage})
         self.gameCommon.images_dict.update({'bullet': bulletImage})
+        self.gameCommon.images_dict.update({'rocket': rocketImage})
+        self.gameCommon.images_dict.update({'slow_bullet': slowBulletImage})
         self.gameCommon.images_dict.update({'heart': heartImage})
         self.gameCommon.images_dict.update({'cash': cashImage})
 

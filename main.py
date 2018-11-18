@@ -53,7 +53,13 @@ while not done:
             towersManager.create_new_tower()
             clicked = guiManager.check_click(mouse_position)
             if clicked == 'canon':
-                towersManager.create_new_temp_tower()
+                towersManager.create_new_temp_tower('canon')
+            elif clicked == 'rocket_launcher':
+                towersManager.create_new_temp_tower('rocket_launcher')
+            elif clicked == 'slow_tower':
+                towersManager.create_new_temp_tower('slow_tower')
+            else:
+                print('it can be smarter but it will be harder than I thought')
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT_BUTTON:
             towersManager.cancel_build()
 

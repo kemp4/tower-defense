@@ -9,19 +9,21 @@ from settings.Settings import CELL_SIZE, MAX_LOAD_PROGRESS
 
 
 class Tower(pygame.sprite.Sprite):
-    __gameCommon = GameCommon()
+    gameCommon = GameCommon()
     position = Vector2()
-    range = 3
+    range = None
     load_progress = MAX_LOAD_PROGRESS
-    load_speed = 1
+    load_speed = None
     disabled = False
-    cost = 20
+    cost = None
+    angle = 0
+    image = None
 
     def __init__(self, position, disabled=False, *groups):
         super().__init__(*groups)
         self.disabled = disabled
         self.position = position
-        self.image = self.__gameCommon.images_dict['canon']
+        self.update_image()
         self.__update_rect()
 
     def __update_rect(self):
@@ -47,17 +49,20 @@ class Tower(pygame.sprite.Sprite):
 
     def __find_targets_in_range(self):
         enemies_in_range = []
-        enemies = self.__gameCommon.enemies_list
+        enemies = self.gameCommon.enemies_list
         if enemies != 0:
             for enemy in enemies:
                 if self.position.distance_to(enemy.position) < self.range:
                     enemies_in_range.append(enemy)
         return enemies_in_range
 
+    # to override
+    def get_rotated_image(self,):
+        return pygame.transform.rotate(self.gameCommon.images_dict['canon'], -self.angle + 90)
+
     def aim(self, nearest_enemy):
-        angle = Vector2(-1, 0).angle_to(nearest_enemy.position - self.position)
-        image = pygame.transform.rotate(self.__gameCommon.images_dict['canon'], -angle + 90)
-        self.image = pygame.transform.scale(image, CELL_SIZE)
+        self.angle = Vector2(-1, 0).angle_to(nearest_enemy.position - self.position)
+        self.update_image()
 
     def __find_nearest_enemy(self, enemies_in_range):
         nearest_enemy = enemies_in_range[0]
@@ -66,10 +71,13 @@ class Tower(pygame.sprite.Sprite):
                 nearest_enemy = enemy
         return nearest_enemy
 
+    def create_new_bullet(self, target):
+        return Bullet(target, self)
+
     def shoot(self, nearest_enemy):
-        new_bullet = Bullet(nearest_enemy, self)
-        self.__gameCommon.bullets_list.add_internal(new_bullet)
-        new_bullet.add(self.__gameCommon.bullets_list)
+        new_bullet = self.create_new_bullet(nearest_enemy)
+        self.gameCommon.bullets_list.add_internal(new_bullet)
+        new_bullet.add(self.gameCommon.bullets_list)
 
     def set_highlighted(self):
         Range(self)
@@ -89,3 +97,8 @@ class Tower(pygame.sprite.Sprite):
 
         # def get_center(self):
         #     return Vector2(self.position-Vector2(0.5*self.range, 0.5*self.range))
+
+    def update_image(self):
+        image = self.get_rotated_image()
+        self.image = pygame.transform.scale(image, CELL_SIZE)
+

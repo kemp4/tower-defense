@@ -1,12 +1,15 @@
 import os
 
 import pygame
+import time
 from pygame.math import Vector2
 from pygame.rect import Rect
 
 from GameCommon import GameCommon
 from objects.enemies.HealthBar import HealthBar
 from settings.Settings import CELL_SIZE
+
+SLOW_END_EVENT = pygame.USEREVENT + 2
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -19,10 +22,14 @@ class Enemy(pygame.sprite.Sprite):
     speed = 0.05
     # surface = pygame.Surface()
     wreck_value = 10
+    slow_time = 0
+    start_slow_time = 0
 
     def __init__(self, max_hp, *groups):
         super().__init__(*groups)
         # self.wreck_value = 10
+        self.slow_value = 1
+        self.slowed = False
         self.max_hp = max_hp
         self.hp = max_hp
         self.position = Vector2(self.__gameCommon.route[0])
@@ -31,7 +38,6 @@ class Enemy(pygame.sprite.Sprite):
         self.health_bar = HealthBar(self)
         self.health_bar.add(self.__gameCommon.gui_list)
         self.__gameCommon.gui_list.add_internal(self.health_bar)
-
 
     def __update_rect(self):
         self.rect = pygame.Rect(self.position[0] * CELL_SIZE[0], self.position[1] * CELL_SIZE[1], CELL_SIZE[0],
@@ -61,7 +67,8 @@ class Enemy(pygame.sprite.Sprite):
         if distance < 0.03:
             self.__find_new_destination_position()
         diff = self.destinationPosition - self.position
-        diff = diff.normalize() * self.speed
+        self.update_slow()
+        diff = diff.normalize() * self.speed * self.slow_value
         self.position += diff
         self.__update_rect()
 
@@ -77,4 +84,21 @@ class Enemy(pygame.sprite.Sprite):
             self.health_bar.kill()
             self.__gameCommon.game_variables['cash'] += self.wreck_value
             self.__gameCommon.game_variables['points'] += self.wreck_value
-            self.wreck_value=0
+            self.wreck_value = 0
+
+    def slow(self, slow_time, slow_value):
+        self.slow_time = slow_time
+        self.slow_value = slow_value
+        self.start_slow_time = time.time()
+        self.slowed = True
+
+    def reset_slow(self):
+        self.slow_value = 1
+        self.slowed = False
+
+    def update_slow(self):
+        if self.slowed:
+            if (time.time() - self.start_slow_time) > self.slow_time:
+                self.reset_slow()
+
+

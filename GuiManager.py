@@ -43,8 +43,11 @@ class GuiManager:
 
     def check_click(self, mouse_position):
         if self.canon.rect.collidepoint(mouse_position):
-            # print('canon choosed')
             return 'canon'
+        elif self.rocket_launcher.rect.collidepoint(mouse_position):
+            return 'rocket_launcher'
+        elif self.slow_tower.rect.collidepoint(mouse_position):
+            return 'slow_tower'
         else:
             return ''
 

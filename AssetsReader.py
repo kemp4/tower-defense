@@ -13,6 +13,7 @@ class AssetsReader:
 
     def read_images(self):
         tankImage = pygame.image.load(os.path.join('assets', 'enemies', 'Tank.png')).convert_alpha()
+        slowedTankImage = pygame.image.load(os.path.join('assets', 'enemies', 'SlowedTank.png')).convert_alpha()
         canonImage = pygame.image.load(os.path.join('assets', 'towers', 'canon.png')).convert_alpha()
         rocketLauncherImage = pygame.image.load(os.path.join('assets', 'towers', 'rocket_launcher.png')).convert_alpha()
         slowTowerImage = pygame.image.load(os.path.join('assets', 'towers', 'slow_tower.png')).convert_alpha()
@@ -24,6 +25,7 @@ class AssetsReader:
         cashImage = pygame.image.load(os.path.join('assets', 'gui', 'cash.png')).convert_alpha()
 
         self.gameCommon.images_dict.update({'tank': tankImage})
+        self.gameCommon.images_dict.update({'slowed_tank': slowedTankImage})
         self.gameCommon.images_dict.update({'mouse': mouseImage})
         self.gameCommon.images_dict.update({'canon': canonImage})
         self.gameCommon.images_dict.update({'rocket_launcher': rocketLauncherImage})

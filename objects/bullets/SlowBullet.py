@@ -12,5 +12,5 @@ class SlowBullet(Bullet):
 
     def explode(self):
         # self.target_enemy.slow(self.parent_tower.slow_time, self.parent_tower.slow_value)
-        self.target_enemy.slow(0.2, 0.5)
+        self.target_enemy.slow(0.5, 0.5)
 

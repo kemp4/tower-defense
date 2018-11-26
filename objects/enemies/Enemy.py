@@ -17,6 +17,7 @@ class Enemy(pygame.sprite.Sprite):
     destinationPosition = Vector2()
     position = Vector2()
     health_bar = None
+    slowed = False
     # color = (111, 0, 16)
     __gameCommon = GameCommon()
     speed = 0.05
@@ -28,13 +29,14 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, max_hp, *groups):
         super().__init__(*groups)
         # self.wreck_value = 10
+        self.base_image = self.__gameCommon.images_dict['tank']
+        self.base_slowed_image = self.__gameCommon.images_dict['slowed_tank']
         self.slow_value = 1
-        self.slowed = False
         self.max_hp = max_hp
         self.hp = max_hp
         self.position = Vector2(self.__gameCommon.route[0])
         self.destinationPosition = Vector2(self.position)
-        self.image = pygame.transform.rotate(self.__gameCommon.images_dict['tank'], 0)
+        # self.image = pygame.transform.rotate(self.base_image, 0)
         self.health_bar = HealthBar(self)
         self.health_bar.add(self.__gameCommon.gui_list)
         self.__gameCommon.gui_list.add_internal(self.health_bar)
@@ -52,9 +54,7 @@ class Enemy(pygame.sprite.Sprite):
             self.health_bar.kill()
         else:
             self.destinationPosition = self.__gameCommon.route[self.destinationIndex]
-            angle = Vector2(-1, 0).angle_to(self.destinationPosition - self.position)
-            # print(angle)
-            self.image = pygame.transform.rotate(self.__gameCommon.images_dict['tank'], -angle)
+            self.__rotate_image()
 
     def get_rect(self):
         return self.position[0] * CELL_SIZE[0], self.position[1] * CELL_SIZE[1], CELL_SIZE[0], CELL_SIZE[1]
@@ -87,10 +87,11 @@ class Enemy(pygame.sprite.Sprite):
             self.wreck_value = 0
 
     def slow(self, slow_time, slow_value):
+        self.slowed = True
+        self.__find_new_destination_position()
         self.slow_time = slow_time
         self.slow_value = slow_value
         self.start_slow_time = time.time()
-        self.slowed = True
 
     def reset_slow(self):
         self.slow_value = 1
@@ -100,5 +101,12 @@ class Enemy(pygame.sprite.Sprite):
         if self.slowed:
             if (time.time() - self.start_slow_time) > self.slow_time:
                 self.reset_slow()
+
+    def __rotate_image(self):
+        angle = Vector2(-1, 0).angle_to(self.destinationPosition - self.position)
+        if self.slowed:
+            self.image = pygame.transform.rotate(self.base_slowed_image, -angle)
+        else:
+            self.image = pygame.transform.rotate(self.base_image, -angle)
 
 
